@@ -34,12 +34,16 @@ function copy_clip(meintext){
 		clip.setData(trans,null,clipid.kGlobalClipboard);
 
 	}
-	alert("Following info was copied to your clipboard:\n\n" + meintext);
+
 	return false;
 }
 //-->
 </script>   
-<span onclick='return copy_clip(this.innerHTML)'>copy this to clipboard</span>
+<form name="testform">
+<textarea name="testsquare">
+</textarea>
+<br>
+<input type="button" onclick="return copy_clip(document.forms[0].testsquare.value)" value="Copy to Clipboard">
+</form>
 </body>
-
 </html>
