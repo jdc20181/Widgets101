@@ -1,127 +1,45 @@
 <!Doctype HTML>
 <html>
 <header>
-  <style>
-    label {
-  clear: both;
-  display: block;
-  font-size: 0.85em;
-  font-weight: bold;
-  padding: 0.8em 0 0.2em 0;
-  user-select: none;
-}
 
-input, button {
-  float: left;
-  font-size: 1em;
-  padding: 3px 6px;
-  margin: 0;
-  border: 1px solid #333;
-  outline: 0;
-  box-shadow: none;
-}
-
-::-moz-focus-inner { 
-  padding: 0;
-  border: 0;
-}
-
-input {
-  width: 15em;
-  background-color: #fff;
-  border-right: 0 none;
-  border-radius: 3px 0 0 3px;
-}
-
-button {
-  position: relative;
-  background-color: #aaa;
-  border-radius: 0 3px 3px 0;
-  cursor: pointer;
-}
-
-.copied::after {
-  position: absolute;
-  top: 12%;
-  right: 110%;
-  display: block;
-  content: "copied";
-  font-size: 0.75em;
-  padding: 2px 3px;
-  color: #fff;
-  background-color: #22a;
-  border-radius: 3px;
-  opacity: 0;
-  will-change: opacity, transform;
-  animation: showcopied 1.5s ease;
-}
-
-@keyframes showcopied {
-  0% {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  70% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  100% {
-    opacity: 0;
-  }
-}
-  </style>
-  <script>
-    /*
-    Copy text from any appropriate field to the clipboard
-  By Craig Buckler, @craigbuckler
-  use it, abuse it, do whatever you like with it!
-*/
-(function() {
-
-    'use strict';
-  
-  // click events
-  document.body.addEventListener('click', copy, true);
-
-    // event handler
-    function copy(e) {
-
-    // find target element
-    var 
-      t = e.target,
-      c = t.dataset.copytarget,
-      inp = (c ? document.querySelector(c) : null);
-      
-    // is element selectable?
-    if (inp && inp.select) {
-      
-      // select text
-      inp.select();
-
-      try {
-        // copy text
-        document.execCommand('copy');
-        inp.blur();
-        
-        // copied animation
-        t.classList.add('copied');
-        setTimeout(function() { t.classList.remove('copied'); }, 1500);
-      }
-      catch (err) {
-        alert('please press Ctrl/Cmd+C to copy');
-      }
-      
-    }
-    
-    }
-
-})();
-  </script>
 </header>
-<body>
-<label for="website">Website:</label>
-<textarea id="website" value="http://www.sitepoint.com/" /></textarea>
-<button data-copytarget="#website">copy</button>
 
+
+<body>
+  <script>
+function copy_clip(meintext){
+	if (window.clipboardData){   
+		window.clipboardData.setData("Text", meintext);
+	}else if (window.netscape){
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+
+		var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
+		if (!clip) return;
+
+		var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
+		if (!trans) return;
+
+		trans.addDataFlavor('text/unicode');
+
+		var str = new Object();
+		var len = new Object();
+
+		var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);   
+		var copytext=meintext;   
+		str.data=copytext;   
+		trans.setTransferData("text/unicode",str,copytext.length*2);   
+		var clipid=Components.interfaces.nsIClipboard;
+
+		if (!clip) return false;   
+		clip.setData(trans,null,clipid.kGlobalClipboard);
+
+	}
+	alert("Following info was copied to your clipboard:\n\n" + meintext);
+	return false;
+}
+//-->
+</script>   
+<span onclick='return copy_clip(this.innerHTML)'>copy this to clipboard</span>
 </body>
- </html>
+
+</html>
